@@ -1,4 +1,6 @@
-"""Training loop for the CIFAR-10 CNN."""
+"""Train the CNN model for multi-class image classification."""
+
+from pathlib import Path
 
 import torch
 import torch.nn as nn
@@ -7,7 +9,7 @@ import torch.optim as optim
 from src.model import CNN
 
 
-def train_model(train_loader, epochs=10, learning_rate=0.001, model_path="models/cifar10_cnn.pth"):
+def train_model(train_loader, epochs=10, learning_rate=0.001, model_path="models/cnn_model.pth"):
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     model = CNN().to(device)
     criterion = nn.CrossEntropyLoss()
@@ -31,6 +33,7 @@ def train_model(train_loader, epochs=10, learning_rate=0.001, model_path="models
         average_loss = total_loss / len(train_loader)
         print(f"Epoch {epoch + 1}/{epochs} - Training Loss: {average_loss:.4f}")
 
+    Path(model_path).parent.mkdir(parents=True, exist_ok=True)
     torch.save(model.state_dict(), model_path)
     print(f"Model weights saved to {model_path}")
     return model, device
