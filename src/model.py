@@ -1,9 +1,11 @@
-"""CNN architecture used for CIFAR-10 classification."""
+"""Define the convolutional neural network for multi-class image classification."""
 
 import torch.nn as nn
 
 
 class CNN(nn.Module):
+    """CNN with three convolutional blocks and a fully connected classifier."""
+
     def __init__(self, num_classes=10):
         super().__init__()
 
