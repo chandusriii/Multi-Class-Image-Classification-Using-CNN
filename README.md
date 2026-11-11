@@ -71,7 +71,7 @@ These values are from the recorded notebook experiment. They should not be inter
 ```text
 Multi-Class-Image-Classification-Using-CNN/
 ├── notebooks/
-│   └── CNN_for_CIFAR10.ipynb
+│   └── Multi_Class_Image_Classification.ipynb
 ├── src/
 │   ├── __init__.py
 │   ├── data_loader.py
