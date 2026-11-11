@@ -25,6 +25,15 @@ def get_data_loaders(data_dir="./data", batch_size=64):
         transform=transform,
     )
 
+    if len(train_dataset) != 50_000 or len(test_dataset) != 10_000:
+        raise RuntimeError(
+            "Incomplete CIFAR-10 dataset detected. Expected 50,000 training "
+            f"and 10,000 test images, but found {len(train_dataset)} training "
+            f"and {len(test_dataset)} test images. Check the dataset files "
+            "or remove the incomplete local CIFAR-10 folder and rerun to "
+            "allow Torchvision to download the complete dataset."
+        )
+
     train_loader = DataLoader(
         train_dataset,
         batch_size=batch_size,
