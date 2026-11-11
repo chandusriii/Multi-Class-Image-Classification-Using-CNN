@@ -1,4 +1,4 @@
-"""Evaluation utilities for the CIFAR-10 CNN."""
+"""Evaluate a trained CNN on a multi-class image test dataset."""
 
 import torch
 
