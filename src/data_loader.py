@@ -1,4 +1,4 @@
-"""Dataset and DataLoader utilities for CIFAR-10."""
+"""Load and preprocess the CIFAR-10 benchmark dataset for image classification."""
 
 from torch.utils.data import DataLoader
 from torchvision.datasets import CIFAR10
