@@ -1,37 +1,53 @@
-# CIFAR-10 Multi-Class Image Classification Using CNN
+# Multi-Class Image Classification Using CNN
 
-## Overview
-A practical implementation of a **Convolutional Neural Network (CNN)** using PyTorch to classify CIFAR-10 images into 10 categories.
+A PyTorch-based deep learning project that uses a **Convolutional Neural Network (CNN)** to classify images into multiple categories.
+
+The current implementation uses the **CIFAR-10 dataset** as the image-classification benchmark. The repository name describes the task and model rather than tying the project title to one dataset.
+
+## Project Overview
+
+Image classification is a computer vision task in which a model learns visual patterns from images and predicts the category each image belongs to. This project explores the end-to-end CNN workflow, including image preprocessing, model architecture, training, and evaluation.
 
 ## Dataset
-CIFAR-10 contains 60,000 colour images: 50,000 training images and 10,000 test images. Each image is 32 × 32 pixels with 3 RGB channels.
+
+This implementation uses **CIFAR-10**, a dataset containing 60,000 colour images across 10 classes:
+
+- 50,000 training images
+- 10,000 test images
+- Image dimensions: 32 × 32 pixels
+- Channels: 3 (RGB)
 
 **Classes:** Airplane, Automobile, Bird, Cat, Deer, Dog, Frog, Horse, Ship, and Truck.
 
+The modular data-loading pipeline uses Torchvision's CIFAR-10 dataset utility and downloads the dataset automatically when it is not already available locally.
+
 ## CNN Architecture
-The custom CNN uses three convolutional layers with ReLU activation and max pooling, followed by fully connected layers.
+
+The custom CNN contains three convolutional blocks followed by fully connected layers.
 
 | Stage | Configuration |
 |---|---|
-| Input | 3 × 32 × 32 |
-| Convolution blocks | 3 → 32 → 64 → 128 channels |
+| Input | 3 × 32 × 32 RGB image |
+| Convolution channels | 3 → 32 → 64 → 128 |
 | Activation | ReLU |
 | Pooling | 2 × 2 Max Pooling after each convolution |
-| Flatten | 128 × 4 × 4 = 2048 features |
-| Fully connected | 2048 → 256 → 10 classes |
+| Flatten | 128 × 4 × 4 = 2,048 features |
+| Fully connected layers | 2,048 → 256 → 10 classes |
 
-## Implementation
-The project demonstrates:
-1. CIFAR-10 dataset loading and normalization.
-2. DataLoader creation for batches.
-3. CNN architecture implementation.
-4. Multi-class loss calculation with CrossEntropyLoss.
-5. Model optimization using Adam.
-6. Forward propagation and backpropagation.
-7. Model evaluation using test accuracy.
+## Workflow
 
-## Results
-The recorded notebook experiment was trained for 10 epochs.
+1. Load the image dataset.
+2. Convert images to tensors and normalize the RGB channels.
+3. Create training and test data loaders.
+4. Define the CNN architecture.
+5. Train the model using forward propagation and backpropagation.
+6. Optimize model parameters using Adam and Cross-Entropy Loss.
+7. Evaluate the trained model on the test dataset.
+8. Save the trained model weights.
+
+## Recorded Notebook Result
+
+The step-by-step notebook contains a recorded 10-epoch experiment with the following results:
 
 | Metric | Recorded value |
 |---|---:|
@@ -39,14 +55,21 @@ The recorded notebook experiment was trained for 10 epochs.
 | First epoch training loss | 0.7556 |
 | Final epoch training loss | 0.1135 |
 
-Results from a new run may differ due to random initialization and data shuffling.
+These values are from the recorded notebook experiment. They should not be interpreted as a verified result from every run of the modular training pipeline; results can vary with initialization, data order, and runtime environment.
 
 ## Tech Stack
-Python · PyTorch · Torchvision · NumPy · Matplotlib · Jupyter Notebook
+
+- Python
+- PyTorch
+- Torchvision
+- NumPy
+- Matplotlib
+- Jupyter Notebook
 
 ## Project Structure
+
 ```text
-CIFAR-10-Multi-Class-Image-Classification-Using-CNN/
+Multi-Class-Image-Classification-Using-CNN/
 ├── notebooks/
 │   └── CNN_for_CIFAR10.ipynb
 ├── src/
@@ -55,48 +78,81 @@ CIFAR-10-Multi-Class-Image-Classification-Using-CNN/
 │   ├── model.py
 │   ├── train.py
 │   └── evaluate.py
-├── models/
-│   └── (saved model weights; generated during training)
 ├── main.py
 ├── requirements.txt
 ├── .gitignore
 └── README.md
 ```
 
-## Run the Project
+The `models/` directory and trained checkpoint are generated when the training script runs. Dataset files are stored locally under `data/`; these generated files are not committed to the repository.
 
-Clone the repository:
+## Getting Started
+
+### 1. Clone the repository
 
 ```bash
-git clone https://github.com/chandusriii/CIFAR-10-Multi-Class-Image-Classification-Using-CNN.git
-cd CIFAR-10-Multi-Class-Image-Classification-Using-CNN
+git clone https://github.com/chandusriii/Multi-Class-Image-Classification-Using-CNN.git
+cd Multi-Class-Image-Classification-Using-CNN
 ```
 
-Create and activate a virtual environment (optional but recommended), then install dependencies:
+### 2. Install dependencies
+
+It is recommended to use a virtual environment.
+
+```bash
+python -m venv .venv
+```
+
+Activate it:
+
+**Windows PowerShell**
+```powershell
+.venv\\Scripts\\Activate.ps1
+```
+
+**macOS / Linux**
+```bash
+source .venv/bin/activate
+```
+
+Install the required packages:
 
 ```bash
 python -m pip install -r requirements.txt
 ```
 
-Run the modular training and evaluation pipeline:
+### 3. Train and evaluate
 
 ```bash
 python main.py
 ```
 
-The CIFAR-10 dataset is downloaded into `data/` on the first run. Trained weights are saved to `models/cifar10_cnn.pth`.
+On the first run, Torchvision attempts to download CIFAR-10 into the local `data/` directory. An internet connection is required for this initial download. The trained weights are saved under `models/`.
 
-To explore the step-by-step implementation, launch Jupyter:
+### 4. Explore the notebook
 
 ```bash
 jupyter notebook
 ```
 
-Then open `notebooks/CNN_for_CIFAR10.ipynb`.
+Open `notebooks/CNN_for_CIFAR10.ipynb` to explore the step-by-step implementation.
 
 ## Learning Outcomes
-- Understand convolution, activation, pooling, and flattening.
-- Prepare image data with PyTorch and Torchvision.
-- Build a CNN for multi-class image classification.
-- Implement training, backpropagation, and evaluation.
-- Organize a notebook experiment into reusable Python modules.
+
+- Understand convolutional layers, feature maps, activation functions, and pooling.
+- Prepare image data using PyTorch and Torchvision.
+- Design a CNN for multi-class image classification.
+- Apply Cross-Entropy Loss and the Adam optimizer.
+- Understand forward propagation, backpropagation, and model evaluation.
+- Structure an experimental notebook into reusable Python modules.
+
+## Current Status
+
+The notebook experiment and modular training pipeline are both included. The notebook's recorded metrics are documented above; a fresh, complete run of the modular pipeline should be performed in the local environment before reporting its results as the project's final benchmark.
+
+## Author
+
+**Chandu Sri**
+
+- GitHub: https://github.com/chandusriii
+- Portfolio: https://chandusriii.github.io/chandusriii/
