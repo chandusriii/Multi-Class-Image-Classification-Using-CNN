@@ -5,6 +5,13 @@ from torchvision.datasets import CIFAR10
 from torchvision import transforms
 
 
+# Use a verified mirror of the original CIFAR-10 archive if the Toronto host is unavailable.
+CIFAR10.url = (
+    "https://huggingface.co/datasets/MIT-OL-AI-D/cifar-10-python/"
+    "resolve/c6e562a/cifar-10-python.tar.gz"
+)
+
+
 def get_data_loaders(data_dir="./data", batch_size=64):
     """Download CIFAR-10 and return training and testing DataLoaders."""
     transform = transforms.Compose([
