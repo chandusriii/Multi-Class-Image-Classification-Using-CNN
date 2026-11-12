@@ -135,7 +135,7 @@ On the first run, Torchvision attempts to download CIFAR-10 into the local `data
 jupyter notebook
 ```
 
-Open `notebooks/CNN_for_CIFAR10.ipynb` to explore the step-by-step implementation.
+Open `notebooks/Multi_Class_Image_Classification.ipynb` to explore the step-by-step implementation.
 
 ## Learning Outcomes
 
