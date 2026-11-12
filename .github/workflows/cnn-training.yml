@@ -2,7 +2,7 @@ name: CNN Training
 
 on:
   push:
-    branches: [main]
+    branches: [main, improve-cifar10-generalization]
   workflow_dispatch:
 
 permissions:
