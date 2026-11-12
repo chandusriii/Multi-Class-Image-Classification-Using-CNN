@@ -1,55 +1,77 @@
-"""Load and preprocess the CIFAR-10 benchmark dataset for image classification."""
+"""Load CIFAR-10 with augmentation and a reproducible validation split."""
 
-from torch.utils.data import DataLoader
-from torchvision.datasets import CIFAR10
+import torch
+from torch.utils.data import DataLoader, Subset
 from torchvision import transforms
+from torchvision.datasets import CIFAR10
 
 
-# Use a verified mirror of the original CIFAR-10 archive if the Toronto host is unavailable.
+# Use a checksum-verified mirror if the original Toronto host is unavailable.
 CIFAR10.url = (
     "https://huggingface.co/datasets/MIT-OL-AI-D/cifar-10-python/"
     "resolve/c6e562a/cifar-10-python.tar.gz"
 )
 
+MEAN = (0.4914, 0.4822, 0.4465)
+STD = (0.2470, 0.2435, 0.2616)
 
-def get_data_loaders(data_dir="./data", batch_size=64):
-    """Download CIFAR-10 and return training and testing DataLoaders."""
-    transform = transforms.Compose([
+
+def get_data_loaders(data_dir="./data", batch_size=64, seed=42):
+    """Return augmented training, clean validation, and clean test loaders."""
+    train_transform = transforms.Compose([
+        transforms.RandomCrop(32, padding=4),
+        transforms.RandomHorizontalFlip(),
         transforms.ToTensor(),
-        transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5)),
+        transforms.Normalize(MEAN, STD),
+    ])
+    evaluation_transform = transforms.Compose([
+        transforms.ToTensor(),
+        transforms.Normalize(MEAN, STD),
     ])
 
+    # Separate dataset instances ensure validation never receives augmentation.
     train_dataset = CIFAR10(
-        root=data_dir,
-        train=True,
-        download=True,
-        transform=transform,
+        root=data_dir, train=True, download=True, transform=train_transform
+    )
+    validation_dataset = CIFAR10(
+        root=data_dir, train=True, download=True, transform=evaluation_transform
     )
     test_dataset = CIFAR10(
-        root=data_dir,
-        train=False,
-        download=True,
-        transform=transform,
+        root=data_dir, train=False, download=True, transform=evaluation_transform
     )
 
     if len(train_dataset) != 50_000 or len(test_dataset) != 10_000:
         raise RuntimeError(
-            "Incomplete CIFAR-10 dataset detected. Expected 50,000 training "
-            f"and 10,000 test images, but found {len(train_dataset)} training "
-            f"and {len(test_dataset)} test images. Check the dataset files "
-            "or remove the incomplete local CIFAR-10 folder and rerun to "
-            "allow Torchvision to download the complete dataset."
+            "Incomplete CIFAR-10 dataset. Expected 50,000 training and "
+            f"10,000 test images; found {len(train_dataset)} and "
+            f"{len(test_dataset)}."
         )
 
+    generator = torch.Generator().manual_seed(seed)
+    indices = torch.randperm(len(train_dataset), generator=generator).tolist()
+    train_indices = indices[:45_000]
+    validation_indices = indices[45_000:]
+
+    train_subset = Subset(train_dataset, train_indices)
+    validation_subset = Subset(validation_dataset, validation_indices)
+
     train_loader = DataLoader(
-        train_dataset,
-        batch_size=batch_size,
-        shuffle=True,
+        train_subset, batch_size=batch_size, shuffle=True, num_workers=2,
+        pin_memory=torch.cuda.is_available(),
+    )
+    validation_loader = DataLoader(
+        validation_subset, batch_size=batch_size, shuffle=False, num_workers=2,
+        pin_memory=torch.cuda.is_available(),
     )
     test_loader = DataLoader(
-        test_dataset,
-        batch_size=batch_size,
-        shuffle=False,
+        test_dataset, batch_size=batch_size, shuffle=False, num_workers=2,
+        pin_memory=torch.cuda.is_available(),
     )
 
-    return train_loader, test_loader
+    print(
+        "Dataset split: "
+        f"{len(train_subset):,} training / "
+        f"{len(validation_subset):,} validation / "
+        f"{len(test_dataset):,} test images"
+    )
+    return train_loader, validation_loader, test_loader
