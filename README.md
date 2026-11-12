@@ -19,7 +19,7 @@ This implementation uses **CIFAR-10**, a dataset containing 60,000 colour images
 
 **Classes:** Airplane, Automobile, Bird, Cat, Deer, Dog, Frog, Horse, Ship, and Truck.
 
-The modular data-loading pipeline uses Torchvision's CIFAR-10 dataset utility and downloads the dataset automatically when it is not already available locally.
+The modular data-loading pipeline uses Torchvision's CIFAR-10 dataset utility. It downloads the original archive from a checksum-verified Hugging Face mirror if the original Toronto download host is unavailable; Torchvision still verifies the archive using its expected MD5 checksum.
 
 ## CNN Architecture
 
@@ -79,6 +79,7 @@ Multi-Class-Image-Classification-Using-CNN/
 │   ├── train.py
 │   └── evaluate.py
 ├── main.py
+├── .github/workflows/cnn-training.yml
 ├── requirements.txt
 ├── .gitignore
 └── README.md
@@ -127,7 +128,7 @@ python -m pip install -r requirements.txt
 python main.py
 ```
 
-On the first run, Torchvision attempts to download CIFAR-10 into the local `data/` directory. An internet connection is required for this initial download. The trained weights are saved under `models/`.
+On the first run, Torchvision downloads CIFAR-10 into the local `data/` directory. The data loader uses a verified mirror to avoid failures from the original download host. The trained weights are saved under `models/`.
 
 ### 4. Explore the notebook
 
@@ -161,7 +162,7 @@ A local validation run was performed using the currently available partial datas
 
 **This is an interim validation result, not the final project benchmark.** The complete CIFAR-10 training split contains 50,000 images. The local environment currently has only four of the five training batches (40,000 images). A full dataset download was attempted but could not complete because network name resolution was unavailable.
 
-The data loader now checks that all 50,000 training and 10,000 test images are present and stops with a clear error if the dataset is incomplete. This prevents an accidental partial-data run from being presented as the final experiment.
+The data loader checks that all 50,000 training and 10,000 test images are present and stops with a clear error if the dataset is incomplete. The GitHub Actions workflow runs the same 10-epoch training and evaluation pipeline and stores its log and model checkpoint as artifacts.
 
 The notebook's separately recorded 74.71% result remains a historical notebook result. It has not been reproduced by the current modular pipeline in this environment. To produce the final benchmark, make the complete dataset available, run `python main.py` for all 10 epochs, and replace this interim status with the verified metrics.
 
