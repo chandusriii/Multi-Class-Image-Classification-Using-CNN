@@ -3,6 +3,11 @@ name: CNN Training
 on:
   push:
     branches: [main, improve-cifar10-generalization]
+    paths:
+      - "src/**"
+      - "main.py"
+      - "requirements.txt"
+      - ".github/workflows/cnn-training.yml"
   workflow_dispatch:
 
 permissions:
@@ -39,5 +44,6 @@ jobs:
           path: |
             training.log
             models/cnn_model.pth
+            reports/*.csv
           if-no-files-found: warn
           retention-days: 14
